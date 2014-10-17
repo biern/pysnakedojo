@@ -56,7 +56,7 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
         return data['waiting-point']
 
     def points_equal(p1, p2):
-        return p1.x == p2.x and p1.y == p2.yy
+        return p1[0] == p2[0] and p1[1] == p2[1]
 
     # stubs:
 
@@ -65,11 +65,11 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
 
     def get_point_direction(point1, point2):
         "return direction letter to get to the point"
-        result = astar(point1, point2)
+        result = astar(point1, point2) or fallback(point1)
         return result[0]
 
     def get_points_distance(point1, point2):
-        result = astar(point1, point2)
+        result = astar(point1, point2) or fallback(point1)
         return result[1]
 
     def astar(start, goal):
@@ -82,6 +82,14 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
             print start, goal
             return abs(start[0] - goal[0]) + abs(start[1] - goal[1])
 
+        def reconstruct_path(came_from, current_node):
+            print 'rec', current_node
+            if current_node in came_from:
+                p, dist = reconstruct_path(came_from, came_from[current_node])
+                return p, dist + 1
+            else:
+                return current_node, 0
+
         def get_neighbors(current):
             for dx, dy in (1, 0), (-1, 0), (0, 1), (0, -1):
                 x = current[0] + dx
@@ -93,14 +101,6 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
                         (x, y) not in info['2'],
                     ]):
                     yield x, y
-
-        def reconstruct_path(came_from, current_node):
-            print 'rec', current_node
-            if current_node in came_from:
-                p, dist = reconstruct_path(came_from, came_from[current_node])
-                return p, dist + 1
-            else:
-                return current_node, 0
 
         def to_direction(a, b):
             print a, b
@@ -141,6 +141,15 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
                     f[neighbor] = g[neighbor] + estimate(neighbor, goal)
                     if neighbor not in open:
                         open.add(neighbor)
+
+        # fallback
+        def to_center_key(point):
+            return abs(point[0] - board_width / 2) + abs(point[1] - board_height / 2)
+        for neighbor in sorted(get_neighbors(current), key=to_center_key):
+            return to_direction(current, neighbor), 1
+
+        # no way to go :(
+        return 'u', 1
 
     # TODOs: killing mode!
     def wrap():
