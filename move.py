@@ -156,10 +156,10 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
         def to_center_key(point):
             return abs(point[0] - board_width / 2) + abs(point[1] - board_height / 2)
         for neighbor in sorted(get_neighbors(current), key=to_center_key):
-            return to_direction(current, neighbor), 1
+            return to_direction(current, neighbor), []
 
         # no way to go :(
-        return 'u', 1
+        return 'u', []
 
     # TODOs: killing mode!
     def wrap():
