@@ -67,7 +67,7 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
         return p1[0] == p2[0] and p1[1] == p2[1]
 
     def contains_point(lst, p):
-        return any(lambda i: points_equal(p, i), lst)
+        return any(map(lambda i: points_equal(p, i), lst))
 
     # stubs:
 
