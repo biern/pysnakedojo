@@ -99,6 +99,11 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
                         0 <= y < info['h'],
                         (x, y) not in info['1'],
                         (x, y) not in info['2'],
+                        # avoid the enemy head:
+                        (x-1, y) not in info['2'][0],
+                        (x+1, y) not in info['2'][0],
+                        (x, y-1) not in info['2'][0],
+                        (x, y+1) not in info['2'][0],
                     ]):
                     yield x, y
 
