@@ -1,6 +1,7 @@
 
 def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board_height=None):
     from collections import namedtuple
+    from random import randint
     Point = namedtuple('Point', 'x y')
 
     if not data:
@@ -49,14 +50,24 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
         current = data.setdefault('waiting-point', a)
         if points_equal(snake1.head, current):
             if current == a:
-                data['waiting-point'] = b
+                current = b
             else:
-                data['waiting-point'] = a
+                current = a
 
-        return data['waiting-point']
+        data['waiting-point'] = current
+        while contains_point(obstacles, current):
+            current = Point(
+                current.x + randint(-3, 3),
+                current.y + randint(-3, 3))
+
+        return current
+
 
     def points_equal(p1, p2):
         return p1[0] == p2[0] and p1[1] == p2[1]
+
+    def contains_point(lst, p):
+        return any(lambda i: points_equal(p, i), lst)
 
     # stubs:
 
@@ -164,6 +175,7 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
     food_distance = get_food_distance(snake1)
     other_food_distance = get_food_distance(snake2)
     mode = data.get('mode')
+    obstacles = snake1.body + snake2.body
 
     actions = {
         'feed': feed,
