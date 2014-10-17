@@ -70,12 +70,12 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
 
     def get_points_distance(point1, point2):
         result = astar(point1, point2) or fallback(point1)
-        return result[1]
+        return len(result[1])
 
     def astar(start, goal):
         """Find shortest path from start to goal
 
-        Return: direction to go, length of path
+        Return: direction to go, path to go
         """
         info = {'w': board_width, 'h': board_height, '1': snake1.body, '2': snake2.body}
         def estimate(start, goal):
@@ -85,10 +85,10 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
         def reconstruct_path(came_from, current_node):
             print 'rec', current_node
             if current_node in came_from:
-                p, dist = reconstruct_path(came_from, came_from[current_node])
-                return p, dist + 1
+                p, rest = reconstruct_path(came_from, came_from[current_node])
+                return p, [p] + rest
             else:
-                return current_node, 0
+                return current_node, []
 
         def get_neighbors(current):
             for dx, dy in (1, 0), (-1, 0), (0, 1), (0, -1):
