@@ -1,6 +1,7 @@
 from collections import namedtuple
 
 from snake import move
+from move import move
 
 
 Point = namedtuple('P', 'x y')
