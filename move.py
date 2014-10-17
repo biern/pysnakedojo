@@ -65,11 +65,11 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
 
     def get_point_direction(point1, point2):
         "return direction letter to get to the point"
-        result = astar(point1, point2) or fallback(point1)
+        result = astar(point1, point2)
         return result[0]
 
     def get_points_distance(point1, point2):
-        result = astar(point1, point2) or fallback(point1)
+        result = astar(point1, point2)
         return len(result[1])
 
     def astar(start, goal):
