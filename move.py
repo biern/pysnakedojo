@@ -57,8 +57,8 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
         data['waiting-point'] = current
         while contains_point(obstacles, current):
             current = Point(
-                current.x + randint(-3, 3),
-                current.y + randint(-3, 3))
+                max(0, min(current.x + randint(-3, 3), board_width)),
+                max(0, min(current.y + randint(-3, 3), board_height)))
 
         return current
 
