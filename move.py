@@ -3,6 +3,7 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
     from collections import namedtuple
     from random import randint
     Point = namedtuple('Point', 'x y')
+    obstacles = snake1.body + snake2.body
 
     if not data:
         data = {}
@@ -95,7 +96,7 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
         def reconstruct_path(came_from, current_node):
             if current_node in came_from:
                 p, rest = reconstruct_path(came_from, came_from[current_node])
-                return p, [p] + rest
+                return p, rest + [current_node]
             else:
                 return current_node, []
 
@@ -105,8 +106,7 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
                 y = current[1] + dy
                 if all([0 <= x < info['w'],
                         0 <= y < info['h'],
-                        (x, y) not in info['1'],
-                        (x, y) not in info['2'],
+                        (x, y) not in obstacles,
                         # avoid the enemy head:
                         (x-1, y) not in info['2'][0],
                         (x+1, y) not in info['2'][0],
@@ -137,8 +137,8 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
         while open:
             current = min(open, key=f.get)
             if current == goal:
-                point, length = reconstruct_path(came_from, goal)
-                return to_direction(current, point), length
+                point, path = reconstruct_path(came_from, goal)
+                return to_direction(current, point), path
             open.discard(current)
             closed.add(current)
             for neighbor in get_neighbors(current):
@@ -174,7 +174,6 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
     food_distance = get_food_distance(snake1)
     other_food_distance = get_food_distance(snake2)
     mode = data.get('mode')
-    obstacles = snake1.body + snake2.body
 
     actions = {
         'feed': feed,

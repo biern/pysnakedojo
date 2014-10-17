@@ -11,4 +11,4 @@ def mksnake(*body):
     return Snake(body[0], body)
 
 
-print move(mksnake((0, 0)), mksnake((5, 5)), (4, 4), None, 10, 10)
+print move(mksnake((0, 0)), mksnake((1, 0)), (4, 0), None, 10, 10)
