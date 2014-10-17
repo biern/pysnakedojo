@@ -39,19 +39,31 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
         return get_point_direction(food)
 
     def wait():
-        # just go somewhere in the middle
         wait_point = get_wait_point()
         return get_point_direction(wait_point)
 
     def get_wait_point():
-        delta = length / 2
-        if mode == 'wait':
-            delta = - length / 2
+        delta = min(length / 2, board_width / 4)
 
-        return Point(board_width / 2 - delta,
-                     board_height / 2 - delta)
+        a = Point(board_width / 2 - delta,
+                  board_height / 2 - delta)
+        b = Point(board_width / 2 + delta,
+                  board_height / 2 + delta)
+
+        current = data.setdefault('waiting-point', a)
+        if points_equal(snake1.head, current):
+            if current == a:
+                data['waiting-point'] = b
+            else:
+                data['waiting-point'] = a
+
+        return data['waiting-point']
+
+    def points_equal(p1, p2):
+        return p1.x == p2.x and p1.y == p2.yy
 
     # stubs:
+
     def get_food_distance(snake):
         return get_points_distance(snake.head, food)
 
