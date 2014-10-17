@@ -90,11 +90,9 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
         """
         info = {'w': board_width, 'h': board_height, '1': snake1.body, '2': snake2.body}
         def estimate(start, goal):
-            print start, goal
             return abs(start[0] - goal[0]) + abs(start[1] - goal[1])
 
         def reconstruct_path(came_from, current_node):
-            print 'rec', current_node
             if current_node in came_from:
                 p, rest = reconstruct_path(came_from, came_from[current_node])
                 return p, [p] + rest
@@ -105,7 +103,6 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
             for dx, dy in (1, 0), (-1, 0), (0, 1), (0, -1):
                 x = current[0] + dx
                 y = current[1] + dy
-                print info
                 if all([0 <= x < info['w'],
                         0 <= y < info['h'],
                         (x, y) not in info['1'],
@@ -119,7 +116,6 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
                     yield x, y
 
         def to_direction(a, b):
-            print a, b
             if a[0] < b[0]:
                 return 'l'
             elif a[0] > b[0]:
@@ -145,8 +141,6 @@ def move(snake1=None, snake2=None, food=None, data=None, board_width=None, board
                 return to_direction(current, point), length
             open.discard(current)
             closed.add(current)
-            #print 'o', open
-            #print 'c', closed
             for neighbor in get_neighbors(current):
                 if neighbor in closed:
                     continue
